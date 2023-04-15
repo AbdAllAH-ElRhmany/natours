@@ -17,6 +17,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression = require('compression');
+const cors = require('cors');
 
 const app = express();
 
@@ -26,6 +27,19 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // 1) Middlewares
+// Implement CORS
+app.use(cors());
+// Access-Control-Allow-Origin *
+// api.natours.com => natours.com
+// app.use(
+//   cors({
+//     origin: 'https://www.natours.com', // Allow Only this ip
+//   })
+// );
+
+app.options('*', cors());
+// app.options('/api/v1/tours/:id', cors());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
