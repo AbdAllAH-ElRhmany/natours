@@ -74,9 +74,9 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   // 3) if everything ok, send token to client
-  console.log(process.env.JWT_SECRET);
-  console.log(process.env.JWT_EXPIRES_IN);
-  console.log(user._id);
+  // console.log(process.env.JWT_SECRET);
+  // console.log(process.env.JWT_EXPIRES_IN);
+  // console.log(user._id);
   createSendToken(user, 200, res);
   // const token = signToken(user._id);
   // res.status(200).json({
@@ -177,7 +177,7 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
     )}/api/v1/users/resetPassword/${resetToken}}`;
     await new Email(user, resetURL).sendPasswordReset();
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save({ validateBeforeSave: false });
@@ -234,7 +234,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user._id).select('+password');
 
   // 2) Check if POSTed password is correct
-  console.log(user);
+  // console.log(user);
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
     return next(new AppError('Your current password is wrong', 401));
   }

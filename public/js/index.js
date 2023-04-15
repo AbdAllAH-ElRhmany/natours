@@ -43,7 +43,7 @@ if (updateUserForm) {
     const form = new FormData();
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
-    console.log(document.getElementById('photo').files);
+    // console.log(document.getElementById('photo').files);
     form.append('photo', document.getElementById('photo').files[0]);
     // const name = document.getElementById('name').value;
     // const email = document.getElementById('email').value;
@@ -59,7 +59,6 @@ if (updateUserForm) {
 
 if (updateUserPassForm) {
   updateUserPassForm.addEventListener('submit', async (e) => {
-    console.log(65465465);
     e.preventDefault();
 
     document.getElementById('savePassBtn').textContent = 'Updateing...';

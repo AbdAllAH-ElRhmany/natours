@@ -8,13 +8,15 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
-const cookieParser = require('cookie-parser');
 const globalErrorHandler = require('./controllers/errorController');
+
+const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const compression = require('compression');
 
 const app = express();
 
@@ -53,17 +55,10 @@ app.use(
 );
 
 // Data sanitization against NoSQL query injection
-// {
-//   "email": { "$gt" : ""},
-//   "password": "123456789"
-// }
 app.use(mongoSanitize());
 
 // Data sanitization against XSS
 app.use(xss());
-
-// Serving static files
-// app.use(express.static(`${__dirname}/public`));
 
 // Prevent parameter pollution
 app.use(
@@ -79,12 +74,12 @@ app.use(
   })
 );
 
+app.use(compression());
+
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   // console.log(req.cookies);
-  // console.log(x);
-  // console.log(req.headers);
 
   next();
 });
@@ -96,14 +91,6 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/bookings', bookingRouter);
 
 app.all('*', (req, res, next) => {
-  // res.status(404).json({
-  //   status: "fail",
-  //   message: `Can't find ${req.originalUrl} on this server`,
-  // });
-
-  // const err = new Error(`Can't find ${req.originalUrl} on this server`);
-  // err.status = "fail";
-  // err.statusCode = 404;
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
 });
 

@@ -197,7 +197,7 @@ exports.getDistances = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log(lat, lng, unit);
+  // console.log(lat, lng, unit);
 
   const distances = await Tour.aggregate([
     {
