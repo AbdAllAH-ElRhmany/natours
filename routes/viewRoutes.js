@@ -4,6 +4,7 @@ const authController = require('./../controllers/authController');
 const bookingController = require('./../controllers/bookingController');
 
 const router = express.Router();
+router.use(viewsController.alerts);
 
 router.get('/me', authController.protect, viewsController.getAccount);
 router.get('/my-tours', authController.protect, viewsController.getMyTours);
@@ -13,8 +14,6 @@ router.post(
   viewsController.updateUserData
 );
 router.use(authController.isLoggedIn);
-
-router.use(viewsController.alerts);
 
 router.get(
   '/',
