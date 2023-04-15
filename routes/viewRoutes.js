@@ -14,7 +14,7 @@ router.post(
 );
 router.use(authController.isLoggedIn);
 
-router.user(viewsController.alerts);
+router.use(viewsController.alerts);
 
 router.get(
   '/',
