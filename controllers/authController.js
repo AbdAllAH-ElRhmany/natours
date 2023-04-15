@@ -12,7 +12,7 @@ const signToken = (id) => {
   });
 };
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   const cookieOptions = {
@@ -21,9 +21,12 @@ const createSendToken = (user, statusCode, res) => {
     ),
     // secure: true,
     httpOnly: true,
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
   };
 
-  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  // if (req.secure || req.headers['x-forwarded-proto'] === 'https')
+  //   cookieOptions.secure = true;
 
   res.cookie('jwt', token, cookieOptions);
 
@@ -54,7 +57,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   // console.log(url);
   await new Email(newUser, url).sendWelcome();
 
-  createSendToken(newUser, 201, res);
+  createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -77,7 +80,7 @@ exports.login = catchAsync(async (req, res, next) => {
   // console.log(process.env.JWT_SECRET);
   // console.log(process.env.JWT_EXPIRES_IN);
   // console.log(user._id);
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
   // const token = signToken(user._id);
   // res.status(200).json({
   // status: 'success',
@@ -167,11 +170,6 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   // const message = `Forget your password? Submit a PATCH request with your new password and
   // passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
   try {
-    // await sendEmail({
-    //   email: req.body.email,
-    //   subject: 'Your password resect token (valid for 10 min)',
-    //   message,
-    // });
     const resetURL = `${req.protocol}://${req.get(
       'host'
     )}/api/v1/users/resetPassword/${resetToken}}`;
@@ -244,7 +242,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   await user.save();
 
   // 4) Log user in, send JWT
-  createSendToken(user, 200, res);
+  createSendToken(user, 200, req, res);
 });
 
 // Only for rendered pages, no errors
