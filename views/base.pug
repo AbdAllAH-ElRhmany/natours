@@ -12,7 +12,7 @@ html
             //link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
             <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://js.stripe.com">
             title Natours | #{title}
-    body
+    body(data-alert=`${alert ? alert : ''}`)
         // HEADER
         include _header
 

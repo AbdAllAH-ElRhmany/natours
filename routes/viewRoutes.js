@@ -14,6 +14,8 @@ router.post(
 );
 router.use(authController.isLoggedIn);
 
+router.user(viewsController.alerts);
+
 router.get(
   '/',
   // bookingController.createBookingCheckout,
