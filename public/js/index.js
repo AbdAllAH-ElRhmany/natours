@@ -1,7 +1,8 @@
 // console.log('hello from parcel');
 import '@babel/polyfill';
-import { login, logout } from './login';
+import { login, logout, sign } from './login';
 import { updateUserData } from './updateSettings';
+import { addReview } from './reviews';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 
@@ -13,6 +14,8 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const updateUserForm = document.querySelector('.form-user-data');
 const updateUserPassForm = document.querySelector('.form-user-settings');
 const bookBtn = document.querySelector('#book_tour');
+const addReviewBtn = document.querySelector('#addReviewBtn');
+const signForm = document.querySelector('#signForm');
 
 // VALUES
 
@@ -36,6 +39,25 @@ if (loginForm) {
   });
 }
 
+if (signForm) {
+  signForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    const passwordConfirm = document.getElementById('password-confirm').value;
+    const email = document.getElementById('email').value;
+    const name = document.getElementById('name').value;
+    const password = document.getElementById('password').value;
+    const data = {
+      name,
+      email,
+      password,
+      passwordConfirm,
+    };
+
+    sign(data);
+  });
+}
+
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
 if (updateUserForm) {
@@ -46,14 +68,6 @@ if (updateUserForm) {
     form.append('email', document.getElementById('email').value);
     // console.log(document.getElementById('photo').files);
     form.append('photo', document.getElementById('photo').files[0]);
-    // const name = document.getElementById('name').value;
-    // const email = document.getElementById('email').value;
-    // const data = {
-    //   name,
-    //   email,
-    // };
-    // updateUserData(data, 'data');
-    // console.log(document.getElementById('photo').files[0].name);
     updateUserData(form, 'data');
   });
 }
@@ -92,3 +106,22 @@ if (bookBtn) {
 
 const alertMsg = document.querySelector('body').dataset.alert;
 if (alertMsg) showAlert('success', alertMsg, 15);
+
+if (addReviewBtn) {
+  addReviewBtn.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    console.log(e);
+    e.target.addBtn.textContent = 'Processing...';
+    const rating = document.querySelector('#rating').value;
+    const review = document.querySelector('#review').value;
+    const { tour } = e.target.dataset;
+    const data = {
+      rating,
+      review,
+      tour,
+    };
+    console.log(data);
+    await addReview(data);
+    e.target.addBtn.textContent = 'Add Review';
+  });
+}

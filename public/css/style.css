@@ -605,7 +605,7 @@ body {
   grid-column-gap: 6rem;
   grid-auto-flow: column;
   /* overflow-x: scroll; */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   -ms-scroll-snap-type: x mandatory;
   scroll-snap-type: x mandatory;
 }
@@ -1323,4 +1323,82 @@ body {
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
   -webkit-transform: translateY(-2px);
   transform: translateY(-2px);
+}
+
+
+
+/* Add Review Style */
+
+.section-newReview {
+  padding: 45px 0;
+  height: 40rem;
+  margin: 0;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+}
+.section-newReview h2{
+  margin: auto;
+  text-align: center;
+  display: block;
+}
+.add-review{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+}
+.add-review .form__group{
+  display: flex;
+  align-items: center;
+  margin: 0;
+  
+}
+.add-review .form__group *{
+  margin: 0;  
+}
+.add-review .form__group .form__input{
+  margin-left: 15px;
+  min-width: 150px;
+}
+.add-review .form__group:nth-of-type(2)  .form__input {
+  min-width: 350px;
+}
+input#review:focus:invalid{
+  border-bottom: 3px solid #55c57a;
+}
+
+.reviews{
+  overflow-x: auto;
+}
+.reviews::-webkit-scrollbar {
+  height: 8px;
+  /* display: none; */
+    opacity: 0;
+}
+  /* Track */
+.reviews::-webkit-scrollbar-track, 
+.reviews::-webkit-scrollbar-track {
+    height: 8px;
+    background: #236d3c; 
+    display: none !important;
+    opacity: 0;
+}
+  /* Handle */
+.reviews::-webkit-scrollbar-thumb {
+  background: #236d3c;
+  border-radius:6px;
+  -webkit-border-radius:6px;
+  -moz-border-radius:6px;
+  -ms-border-radius:6px;
+  -o-border-radius:6px;
+  display: none;
+
+}
+
+/* Handle on hover */
+.reviews:hover::-webkit-scrollbar-track,
+.reviews:hover::-webkit-scrollbar-thumb,
+.reviews::-webkit-scrollbar-track {
+  display: block;
 }

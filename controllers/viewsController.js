@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const Review = require('../models/reviewModel');
 
 exports.getOverview = catchAsync(async (req, res) => {
   // 1) Get tout data from collection
@@ -16,6 +17,20 @@ exports.getOverview = catchAsync(async (req, res) => {
     tours,
   });
 });
+
+const checkLogin = async (req, res, tour) => {
+  if (res.locals.user) {
+    const booking = await Booking.findOne({
+      tour,
+      user: res.locals.user.id,
+    });
+    if (booking) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+};
 
 exports.getTour = catchAsync(async (req, res, next) => {
   // 1) Get the data from the requested tour including reviews and guides
@@ -32,16 +47,23 @@ exports.getTour = catchAsync(async (req, res, next) => {
   if (!tour) {
     return next(new AppError('There is no tour with that name.', 404));
   }
-
+  const isBooked = await checkLogin(req, res, tour.id);
   res.status(200).render('tour', {
     title: `${tour.name} tour`,
     tour,
+    isBooked,
   });
 });
 
 exports.getLoginForm = catchAsync(async (req, res) => {
   res.status(200).render('login', {
     title: 'Log into your account',
+  });
+});
+
+exports.getSignForm = catchAsync(async (req, res) => {
+  res.status(200).render('signup', {
+    title: 'Sign up ',
   });
 });
 
@@ -87,7 +109,19 @@ exports.alerts = (req, res, next) => {
 
   if (alert === 'booking')
     res.locals.alert =
-      "Your booking was successful! Please check your eamail for a confirmation. If your booking doesn't show up here immediatly, please come back later.";
+      "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediatly, please come back later.";
 
   next();
 };
+
+exports.getMyReveiws = catchAsync(async (req, res, next) => {
+  const reviews = await Review.find({ user: req.user.id });
+  const toursIds = reviews.map((el) => el.tour);
+  const tours = await Tour.find({ _id: { $in: toursIds } });
+
+  res.status(200).render('overview', {
+    title: 'My Reviews',
+    tours,
+    reviews: true,
+  });
+});

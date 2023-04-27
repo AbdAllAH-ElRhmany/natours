@@ -65,27 +65,45 @@ block content
         each img, i in tour.images
             .picture-box
                 img.picture-box__img(src=`/img/tours/${img}`, alt=`${tour.name} ${i + 1}`, class=`picture-box__img--${i + 1}`)
+    if isBooked
+        section.section-map.section-newReview 
+            .container
+                h2.heading-secondary.ma-bt-md Review The Tour
+                form.form.add-review#addReviewBtn(data-tour=`${tour.id}`)
+                    .form__group
+                        label.form__label(for='rateing') Rateing
+                        select#rating.form__input(name="rating" required)
+                            option(value="1") 1  
+                            option(value="2") 2  
+                            option(value="3") 3  
+                            option(value="4") 4  
+                            option(value="5") 5  
+                    .form__group
+                        label.form__label(for='review') Review
+                        input#review.form__input(type='text' , placeholder='Your review' required name='review')
+                    .form__group.right
+                        button#addBtn.btn.btn--small.btn--green(type='submit') Add Review
 
-    section.section-map
-        #map(data-locations=`${JSON.stringify(tour.locations)}`)
+            //- #map(data-locations=`${JSON.stringify(tour.locations)}`)
 
     section.section-reviews
         .reviews
             each review in tour.reviews
                 +reviewCard(review)
-    section.section-cta
-    .cta
-        .cta__img.cta__img--logo
-        img(src='/img/logo-white.png', alt='Natours logo')
-        img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt=`${tour.name}`)
-        img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt=`${tour.name}`)
-        .cta__content
-            h2.heading-secondary What are you waiting for?
-            p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
+    if !isBooked
+        section.section-cta
+            .cta
+                .cta__img.cta__img--logo
+                img(src='/img/logo-white.png', alt='Natours logo')
+                img.cta__img.cta__img--1(src=`/img/tours/${tour.images[1]}`, alt=`${tour.name}`)
+                img.cta__img.cta__img--2(src=`/img/tours/${tour.images[2]}`, alt=`${tour.name}`)
+                .cta__content
+                    h2.heading-secondary What are you waiting for?
+                    p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
 
-            if user
-                button.btn.btn--green.span-all-rows#book_tour(data-tourId=`${tour.id}`) Book tour now!
-            else
-                a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
+                    if user
+                        button.btn.btn--green.span-all-rows#book_tour(data-tourId=`${tour.id}`) Book tour now!
+                    else
+                        a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
 
 
